@@ -24,8 +24,8 @@ import {
   CreditCard,
   FileText,
   LogOut,
-  Swords,
 } from 'lucide-react';
+import combatMarketLogo from '@/assets/combat-market-logo.svg';
 import { Button } from '@/components/ui/button';
 
 const merchantItems = [
@@ -60,7 +60,7 @@ export function AppSidebar() {
       <SidebarContent>
         {/* Logo */}
         <div className="flex items-center gap-2 px-4 py-4 border-b border-sidebar-border">
-          <Swords className="h-6 w-6 text-primary shrink-0" />
+          <img src={combatMarketLogo} alt="Combat Market" className="h-6 w-6 shrink-0" />
           {!collapsed && (
             <span className="font-display text-lg tracking-wider text-sidebar-foreground">
               Combat Market

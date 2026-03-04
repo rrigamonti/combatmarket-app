@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { Swords } from 'lucide-react';
+import combatMarketLogo from '@/assets/combat-market-logo.svg';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -50,7 +50,7 @@ const Auth = () => {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-md">
         <div className="flex items-center justify-center gap-3 mb-8">
-          <Swords className="h-10 w-10 text-primary" />
+          <img src={combatMarketLogo} alt="Combat Market" className="h-10 w-10" />
           <h1 className="text-3xl font-display tracking-wider">Combat Market</h1>
         </div>
 

@@ -46,8 +46,8 @@ const Dashboard = () => {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-display">Dashboard</h1>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => navigate('/float')}><ArrowUpRight className="h-4 w-4 mr-1" /> Top Up</Button>
-          <Button onClick={() => navigate('/missions/create')}><Plus className="h-4 w-4 mr-1" /> New Mission</Button>
+          <Button variant="outline" onClick={() => navigate('/merchant/float')}><ArrowUpRight className="h-4 w-4 mr-1" /> Top Up</Button>
+          <Button onClick={() => navigate('/merchant/missions/create')}><Plus className="h-4 w-4 mr-1" /> New Mission</Button>
         </div>
       </div>
       {!merchantId && (
@@ -68,8 +68,8 @@ const Dashboard = () => {
         <Card><CardHeader><CardTitle className="font-display text-lg">Recent Activity</CardTitle></CardHeader><CardContent><p className="text-sm text-muted-foreground">No recent activity to display.</p></CardContent></Card>
         <Card><CardHeader><CardTitle className="font-display text-lg">Quick Actions</CardTitle></CardHeader>
           <CardContent className="space-y-2">
-            <Button variant="outline" className="w-full justify-start" onClick={() => navigate('/missions/create')}><Target className="h-4 w-4 mr-2" /> Create a Mission</Button>
-            <Button variant="outline" className="w-full justify-start" onClick={() => navigate('/float')}><Wallet className="h-4 w-4 mr-2" /> View Float Balance</Button>
+            <Button variant="outline" className="w-full justify-start" onClick={() => navigate('/merchant/missions/create')}><Target className="h-4 w-4 mr-2" /> Create a Mission</Button>
+            <Button variant="outline" className="w-full justify-start" onClick={() => navigate('/merchant/float')}><Wallet className="h-4 w-4 mr-2" /> View Float Balance</Button>
           </CardContent>
         </Card>
       </div>

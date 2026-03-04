@@ -14,6 +14,8 @@ interface AuthContextType {
   loading: boolean;
   roles: UserRole[];
   isAdmin: boolean;
+  isFighter: boolean;
+  isMerchant: boolean;
   merchantId: string | null;
   signOut: () => Promise<void>;
 }
@@ -24,6 +26,8 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
   roles: [],
   isAdmin: false,
+  isFighter: false,
+  isMerchant: false,
   merchantId: null,
   signOut: async () => {},
 });
@@ -71,6 +75,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const isAdmin = roles.some(r => r.role === 'admin');
+  const isFighter = roles.some(r => r.role === 'fighter');
+  const isMerchant = roles.some(r => ['owner', 'marketing', 'finance', 'analyst', 'support'].includes(r.role));
   const merchantId = roles.find(r => r.merchant_id)?.merchant_id ?? null;
 
   const signOut = async () => {
@@ -79,7 +85,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, roles, isAdmin, merchantId, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, roles, isAdmin, isFighter, isMerchant, merchantId, signOut }}>
       {children}
     </AuthContext.Provider>
   );

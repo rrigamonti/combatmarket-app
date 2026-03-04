@@ -35,7 +35,7 @@ const MissionsPage = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-display">Missions</h1>
-        <Button onClick={() => navigate('/missions/create')}><Plus className="h-4 w-4 mr-1" /> Create Mission</Button>
+        <Button onClick={() => navigate('/merchant/missions/create')}><Plus className="h-4 w-4 mr-1" /> Create Mission</Button>
       </div>
       <div className="flex gap-4">
         <div className="relative flex-1 max-w-sm">
@@ -61,7 +61,7 @@ const MissionsPage = () => {
                 <TableCell className="font-mono">{m.budget ? `$${m.budget.toFixed(2)}` : '—'}</TableCell>
                 <TableCell>{m.current_participants}/{m.max_participants || '∞'}</TableCell>
                 <TableCell className="text-sm text-muted-foreground">{new Date(m.created_at).toLocaleDateString()}</TableCell>
-                <TableCell><Button variant="ghost" size="icon" onClick={() => navigate(`/missions/${m.id}`)}><Eye className="h-4 w-4" /></Button></TableCell>
+                <TableCell><Button variant="ghost" size="icon" onClick={() => navigate(`/merchant/missions/${m.id}`)}><Eye className="h-4 w-4" /></Button></TableCell>
               </TableRow>
             ))}
           </TableBody>

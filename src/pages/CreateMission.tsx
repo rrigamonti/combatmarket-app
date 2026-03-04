@@ -42,7 +42,7 @@ const CreateMission = () => {
     try {
       const { error } = await db.from('missions').insert(await buildPayload());
       if (error) throw error;
-      toast.success('Mission saved as draft'); navigate('/missions');
+      toast.success('Mission saved as draft'); navigate('/merchant/missions');
     } catch (err: any) { toast.error(err.message); }
     finally { setLoading(false); }
   };
@@ -55,7 +55,7 @@ const CreateMission = () => {
       if (insertErr || !mission) throw insertErr || new Error('Failed to create mission');
       const { error: pubErr } = await db.rpc('publish_mission', { _mission_id: mission.id, _idempotency_key: `publish-${mission.id}-${Date.now()}` });
       if (pubErr) throw pubErr;
-      toast.success('Mission published and budget reserved!'); navigate('/missions');
+      toast.success('Mission published and budget reserved!'); navigate('/merchant/missions');
     } catch (err: any) { toast.error(err.message); }
     finally { setLoading(false); }
   };
@@ -63,7 +63,7 @@ const CreateMission = () => {
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
       <div className="flex items-center gap-4">
-        <Button variant="ghost" onClick={() => navigate('/missions')}><ArrowLeft className="h-4 w-4 mr-1" /> Back</Button>
+        <Button variant="ghost" onClick={() => navigate('/merchant/missions')}><ArrowLeft className="h-4 w-4 mr-1" /> Back</Button>
         <h1 className="text-2xl font-display">Create Mission</h1>
       </div>
       <div className="flex items-center gap-2">

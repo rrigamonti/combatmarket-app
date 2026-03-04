@@ -62,7 +62,7 @@ const MissionDetail = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Button variant="ghost" onClick={() => navigate('/missions')}><ArrowLeft className="h-4 w-4 mr-1" /> Back</Button>
+        <Button variant="ghost" onClick={() => navigate('/merchant/missions')}><ArrowLeft className="h-4 w-4 mr-1" /> Back</Button>
         <h1 className="text-2xl font-display">{mission.name}</h1>
         <Badge variant={mission.status === 'active' ? 'default' : 'secondary'}>{mission.status}</Badge>
       </div>

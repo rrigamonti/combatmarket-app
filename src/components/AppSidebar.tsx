@@ -25,15 +25,15 @@ import {
   FileText,
   LogOut,
 } from 'lucide-react';
-import combatMarketLogo from '@/assets/combat-market-logo.svg';
 import { Button } from '@/components/ui/button';
+import combatMarketLogo from '@/assets/combat-market-logo.svg';
 
 const merchantItems = [
-  { title: 'Dashboard', url: '/', icon: LayoutDashboard },
-  { title: 'Missions', url: '/missions', icon: Target },
-  { title: 'Float', url: '/float', icon: Wallet },
-  { title: 'Reports', url: '/reports', icon: BarChart3 },
-  { title: 'Settings', url: '/settings', icon: Settings },
+  { title: 'Dashboard', url: '/merchant', icon: LayoutDashboard },
+  { title: 'Missions', url: '/merchant/missions', icon: Target },
+  { title: 'Float', url: '/merchant/float', icon: Wallet },
+  { title: 'Reports', url: '/merchant/reports', icon: BarChart3 },
+  { title: 'Settings', url: '/merchant/settings', icon: Settings },
 ];
 
 const adminItems = [
@@ -48,17 +48,16 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === 'collapsed';
   const location = useLocation();
-  const { isAdmin, signOut, user } = useAuth();
+  const { isAdmin, isMerchant, signOut, user } = useAuth();
 
   const isActive = (path: string) => {
-    if (path === '/') return location.pathname === '/';
+    if (path === '/merchant' || path === '/admin') return location.pathname === path;
     return location.pathname.startsWith(path);
   };
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <SidebarContent>
-        {/* Logo */}
         <div className="flex items-center gap-2 px-4 py-4 border-b border-sidebar-border">
           <img src={combatMarketLogo} alt="Combat Market" className="h-6 w-6 shrink-0" />
           {!collapsed && (
@@ -68,33 +67,33 @@ export function AppSidebar() {
           )}
         </div>
 
-        {/* Merchant Nav */}
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-xs text-muted-foreground uppercase tracking-widest">
-            {!collapsed && 'Merchant'}
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {merchantItems.map(item => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
-                    <NavLink
-                      to={item.url}
-                      end={item.url === '/'}
-                      className="hover:bg-sidebar-accent"
-                      activeClassName="bg-sidebar-accent text-primary font-medium"
-                    >
-                      <item.icon className="h-4 w-4 shrink-0" />
-                      {!collapsed && <span>{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {isMerchant && (
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-xs text-muted-foreground uppercase tracking-widest">
+              {!collapsed && 'Merchant'}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {merchantItems.map(item => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                      <NavLink
+                        to={item.url}
+                        end={item.url === '/merchant'}
+                        className="hover:bg-sidebar-accent"
+                        activeClassName="bg-sidebar-accent text-primary font-medium"
+                      >
+                        <item.icon className="h-4 w-4 shrink-0" />
+                        {!collapsed && <span>{item.title}</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
 
-        {/* Admin Nav */}
         {isAdmin && (
           <SidebarGroup>
             <SidebarGroupLabel className="text-xs text-muted-foreground uppercase tracking-widest">

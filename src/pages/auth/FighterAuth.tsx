@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { db } from '@/integrations/supabase/db';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import combatMarketLogo from '@/assets/combat-market-logo.svg';
+import { Swords } from 'lucide-react';
 
-const Auth = () => {
+const FighterAuth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,15 +21,14 @@ const Auth = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       if (isLogin) {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        toast.success('Welcome back!');
-        navigate('/');
+        toast.success('Welcome back, Fighter!');
+        navigate('/fighter');
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { data: signUpData, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -36,8 +37,16 @@ const Auth = () => {
           },
         });
         if (error) throw error;
-        toast.success('Account created successfully!');
-        navigate('/');
+
+        // Assign fighter role
+        if (signUpData.user) {
+          await db.from('user_roles').insert({
+            user_id: signUpData.user.id,
+            role: 'fighter',
+          });
+        }
+
+        toast.success('Account created! Check your email to verify.');
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -53,14 +62,16 @@ const Auth = () => {
           <img src={combatMarketLogo} alt="Combat Market" className="h-10 w-10" />
           <h1 className="text-3xl font-display tracking-wider">Combat Market</h1>
         </div>
-
         <Card className="border-border">
           <CardHeader className="text-center">
+            <div className="flex justify-center mb-2">
+              <Swords className="h-8 w-8 text-primary" />
+            </div>
             <CardTitle className="font-display text-xl">
-              {isLogin ? 'Sign In' : 'Create Account'}
+              {isLogin ? 'Fighter Login' : 'Join as Fighter'}
             </CardTitle>
             <CardDescription>
-              {isLogin ? 'Enter your credentials to access your dashboard' : 'Set up your merchant account'}
+              {isLogin ? 'Sign in to browse and complete missions' : 'Create your fighter account and start earning'}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -68,48 +79,23 @@ const Auth = () => {
               {!isLogin && (
                 <div className="space-y-2">
                   <Label htmlFor="fullName">Full Name</Label>
-                  <Input
-                    id="fullName"
-                    value={fullName}
-                    onChange={e => setFullName(e.target.value)}
-                    placeholder="John Doe"
-                    required={!isLogin}
-                  />
+                  <Input id="fullName" value={fullName} onChange={e => setFullName(e.target.value)} placeholder="Your name" required={!isLogin} />
                 </div>
               )}
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  required
-                />
+                <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="fighter@example.com" required />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                  minLength={6}
-                />
+                <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required minLength={6} />
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Loading...' : isLogin ? 'Sign In' : 'Create Account'}
+                {loading ? 'Loading...' : isLogin ? 'Sign In' : 'Create Fighter Account'}
               </Button>
             </form>
             <div className="mt-4 text-center">
-              <button
-                type="button"
-                onClick={() => setIsLogin(!isLogin)}
-                className="text-sm text-muted-foreground hover:text-primary transition-colors"
-              >
+              <button type="button" onClick={() => setIsLogin(!isLogin)} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                 {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
               </button>
             </div>
@@ -120,4 +106,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default FighterAuth;

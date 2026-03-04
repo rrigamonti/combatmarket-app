@@ -30,9 +30,8 @@ const PortalSelect = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-2xl">
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <img src={combatMarketLogo} alt="Combat Market" className="h-12 w-12" />
-          <h1 className="text-4xl font-display tracking-wider">Combat Market</h1>
+        <div className="flex items-center justify-center mb-8">
+          <img src={combatMarketLogo} alt="Combat Market" className="h-24 w-24" />
         </div>
         <p className="text-center text-muted-foreground mb-8">Choose your portal to get started</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

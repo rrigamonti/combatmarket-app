@@ -379,6 +379,7 @@ export type Database = {
         | "analyst"
         | "support"
         | "admin"
+        | "fighter"
       evidence_type:
         | "photo"
         | "video"
@@ -546,6 +547,7 @@ export const Constants = {
         "analyst",
         "support",
         "admin",
+        "fighter",
       ],
       evidence_type: [
         "photo",

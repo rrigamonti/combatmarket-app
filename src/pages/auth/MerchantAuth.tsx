@@ -74,9 +74,8 @@ const MerchantAuth = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-md">
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <img src={combatMarketLogo} alt="Combat Market" className="h-10 w-10" />
-          <h1 className="text-3xl font-display tracking-wider">Combat Market</h1>
+        <div className="flex items-center justify-center mb-8">
+          <img src={combatMarketLogo} alt="Combat Market" className="h-20 w-20" />
         </div>
         <Card className="border-border">
           <CardHeader className="text-center">

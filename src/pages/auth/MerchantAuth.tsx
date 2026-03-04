@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { db } from '@/integrations/supabase/db';
@@ -19,6 +19,20 @@ const MerchantAuth = () => {
   const [website, setWebsite] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  // Redirect if already authenticated as merchant
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data: roles } = await db.from('user_roles').select('role').eq('user_id', session.user.id);
+        if (roles?.some(r => ['owner', 'marketing', 'finance', 'analyst', 'support'].includes(r.role))) {
+          navigate('/merchant', { replace: true });
+        }
+      }
+    };
+    checkSession();
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

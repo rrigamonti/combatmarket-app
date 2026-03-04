@@ -34,24 +34,24 @@ const PortalSelect = () => {
           <img src={combatMarketLogo} alt="Combat Market" className="h-24 w-24" />
         </div>
         <p className="text-center text-muted-foreground mb-8">Choose your portal to get started</p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-4">
           {portals.map(portal => (
             <Card
               key={portal.title}
-              className="border-border cursor-pointer hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-200"
+              className="border-border cursor-pointer hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 active:bg-secondary/50 transition-all duration-200"
               onClick={() => navigate(portal.path)}
             >
-              <CardHeader className="text-center pb-2">
-                <div className="flex justify-center mb-3">
+              <div className="flex items-center gap-4 p-4 md:flex-col md:text-center md:p-0">
+                <div className="flex justify-center shrink-0 md:pt-6 md:mb-0">
                   <portal.icon className="h-10 w-10 text-primary" />
                 </div>
-                <CardTitle className="font-display text-lg">{portal.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-center text-xs">
-                  {portal.description}
-                </CardDescription>
-              </CardContent>
+                <div className="flex-1 md:px-6 md:pb-6">
+                  <CardTitle className="font-display text-lg">{portal.title}</CardTitle>
+                  <CardDescription className="text-xs mt-1">
+                    {portal.description}
+                  </CardDescription>
+                </div>
+              </div>
             </Card>
           ))}
         </div>

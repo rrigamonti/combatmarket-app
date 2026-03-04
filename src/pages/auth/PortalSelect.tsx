@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import combatMarketLogo from '@/assets/combat-market-logo.svg';
 import { Swords, Store, Shield } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useEffect } from 'react';
 
 const portals = [
   {
@@ -26,6 +28,14 @@ const portals = [
 
 const PortalSelect = () => {
   const navigate = useNavigate();
+  const { user, isAdmin, isMerchant, isFighter, loading } = useAuth();
+
+  useEffect(() => {
+    if (loading || !user) return;
+    if (isAdmin) navigate('/admin', { replace: true });
+    else if (isMerchant) navigate('/merchant', { replace: true });
+    else if (isFighter) navigate('/fighter', { replace: true });
+  }, [user, isAdmin, isMerchant, isFighter, loading, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">

@@ -30,6 +30,11 @@ import AdminMerchants from "@/pages/admin/AdminMerchants";
 import AdminReviews from "@/pages/admin/AdminReviews";
 import AdminPayouts from "@/pages/admin/AdminPayouts";
 import AdminReports from "@/pages/admin/AdminReports";
+import AdminAnalytics from "@/pages/admin/AdminAnalytics";
+import AdminMissions from "@/pages/admin/AdminMissions";
+import AdminCreateMission from "@/pages/admin/AdminCreateMission";
+import AdminMissionManage from "@/pages/admin/AdminMissionManage";
+import AdminFighters from "@/pages/admin/AdminFighters";
 
 // Fighter pages
 import FighterDashboard from "@/pages/fighter/FighterDashboard";
@@ -103,6 +108,11 @@ const AppRoutes = () => {
       <Route path="/admin/reviews" element={<AdminRoute><AdminReviews /></AdminRoute>} />
       <Route path="/admin/payouts" element={<AdminRoute><AdminPayouts /></AdminRoute>} />
       <Route path="/admin/reports" element={<AdminRoute><AdminReports /></AdminRoute>} />
+      <Route path="/admin/analytics" element={<AdminRoute><AdminAnalytics /></AdminRoute>} />
+      <Route path="/admin/missions" element={<AdminRoute><AdminMissions /></AdminRoute>} />
+      <Route path="/admin/missions/create" element={<AdminRoute><AdminCreateMission /></AdminRoute>} />
+      <Route path="/admin/missions/:id" element={<AdminRoute><AdminMissionManage /></AdminRoute>} />
+      <Route path="/admin/fighters" element={<AdminRoute><AdminFighters /></AdminRoute>} />
 
       {/* Fighter routes */}
       <Route path="/fighter" element={<FighterRoute><FighterDashboard /></FighterRoute>} />

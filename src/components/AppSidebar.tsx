@@ -25,6 +25,7 @@ import {
   FileText,
   LogOut,
   ShieldCheck,
+  Swords,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import combatMarketLogo from '@/assets/combat-market-logo.svg';
@@ -38,8 +39,11 @@ const merchantItems = [
 ];
 
 const adminItems = [
-  { title: 'Admin Dashboard', url: '/admin', icon: LayoutDashboard },
+  { title: 'Dashboard', url: '/admin', icon: LayoutDashboard },
+  { title: 'Analytics', url: '/admin/analytics', icon: BarChart3 },
+  { title: 'Missions', url: '/admin/missions', icon: Target },
   { title: 'Merchants', url: '/admin/merchants', icon: Users },
+  { title: 'Fighters', url: '/admin/fighters', icon: Swords },
   { title: 'Review Queue', url: '/admin/reviews', icon: ClipboardCheck },
   { title: 'Payouts', url: '/admin/payouts', icon: CreditCard },
   { title: 'System Reports', url: '/admin/reports', icon: FileText },

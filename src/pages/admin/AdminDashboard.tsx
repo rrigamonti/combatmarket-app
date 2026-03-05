@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { db } from '@/integrations/supabase/db';
-import { Users, Target, ClipboardCheck } from 'lucide-react';
+import { Users, Target, ClipboardCheck, Swords, Store } from 'lucide-react';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState({ merchants: 0, activeMissions: 0, pendingReviews: 0 });
 
   useEffect(() => {
@@ -35,6 +38,34 @@ const AdminDashboard = () => {
             <CardContent><div className="text-2xl font-bold font-display">{c.value}</div></CardContent>
           </Card>
         ))}
+      </div>
+
+      <div>
+        <h2 className="text-lg font-display mb-3">Switch Portal</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Card className="cursor-pointer hover:border-primary/50 transition-colors" onClick={() => navigate('/fighter')}>
+            <CardContent className="flex items-center gap-4 p-6">
+              <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Swords className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="font-medium">Fighter Dashboard</p>
+                <p className="text-sm text-muted-foreground">View as Fighter</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="cursor-pointer hover:border-primary/50 transition-colors" onClick={() => navigate('/merchant')}>
+            <CardContent className="flex items-center gap-4 p-6">
+              <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Store className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="font-medium">Merchant Dashboard</p>
+                <p className="text-sm text-muted-foreground">View as Merchant</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

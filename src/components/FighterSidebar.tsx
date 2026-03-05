@@ -18,6 +18,7 @@ import {
   Target,
   Trophy,
   LogOut,
+  ShieldCheck,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import combatMarketLogo from '@/assets/combat-market-logo.svg';
@@ -32,7 +33,7 @@ export function FighterSidebar() {
   const { state } = useSidebar();
   const collapsed = state === 'collapsed';
   const location = useLocation();
-  const { signOut, user } = useAuth();
+  const { signOut, user, isAdmin } = useAuth();
 
   const isActive = (path: string) => {
     if (path === '/fighter') return location.pathname === '/fighter';
@@ -76,6 +77,16 @@ export function FighterSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border p-3">
+        {isAdmin && (
+          <NavLink
+            to="/admin"
+            className="flex items-center gap-2 px-2 py-1.5 rounded-md text-sm text-muted-foreground hover:bg-sidebar-accent hover:text-foreground mb-2"
+            activeClassName=""
+          >
+            <ShieldCheck className="h-4 w-4 shrink-0" />
+            {!collapsed && <span>Admin Dashboard</span>}
+          </NavLink>
+        )}
         {!collapsed && user && (
           <p className="text-xs text-muted-foreground truncate mb-2">{user.email}</p>
         )}

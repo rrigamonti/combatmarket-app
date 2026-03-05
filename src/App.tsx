@@ -48,10 +48,10 @@ const LoadingScreen = () => (
 );
 
 const MerchantRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, isMerchant, loading } = useAuth();
+  const { user, isMerchant, isAdmin, loading } = useAuth();
   if (loading) return <LoadingScreen />;
   if (!user) return <Navigate to="/merchant/login" replace />;
-  if (!isMerchant) return <Navigate to="/" replace />;
+  if (!isMerchant && !isAdmin) return <Navigate to="/" replace />;
   return <AppLayout>{children}</AppLayout>;
 };
 
@@ -64,10 +64,10 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 const FighterRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, isFighter, loading } = useAuth();
+  const { user, isFighter, isAdmin, loading } = useAuth();
   if (loading) return <LoadingScreen />;
   if (!user) return <Navigate to="/fighter/login" replace />;
-  if (!isFighter) return <Navigate to="/" replace />;
+  if (!isFighter && !isAdmin) return <Navigate to="/" replace />;
   return <FighterLayout>{children}</FighterLayout>;
 };
 

@@ -133,7 +133,7 @@ const FighterMissionDetail = () => {
         <Card className="border-primary/30 bg-primary/5">
           <CardHeader className="pb-2">
             <CardTitle className="font-display text-lg flex items-center gap-2">
-              📋 Come completare questa missione
+              📋 How to complete this mission
             </CardTitle>
           </CardHeader>
           <CardContent>

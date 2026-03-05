@@ -50,6 +50,7 @@ export function AppSidebar() {
   const collapsed = state === 'collapsed';
   const location = useLocation();
   const { isAdmin, isMerchant, signOut, user } = useAuth();
+  const isOnMerchantRoutes = location.pathname.startsWith('/merchant');
 
   const isActive = (path: string) => {
     if (path === '/merchant' || path === '/admin') return location.pathname === path;
@@ -68,7 +69,7 @@ export function AppSidebar() {
           )}
         </div>
 
-        {isMerchant && (
+        {isOnMerchantRoutes && (
           <SidebarGroup>
             <SidebarGroupLabel className="text-xs text-muted-foreground uppercase tracking-widest">
               {!collapsed && 'Merchant'}
@@ -95,7 +96,7 @@ export function AppSidebar() {
           </SidebarGroup>
         )}
 
-        {isAdmin && (
+        {isAdmin && !isOnMerchantRoutes && (
           <SidebarGroup>
             <SidebarGroupLabel className="text-xs text-muted-foreground uppercase tracking-widest">
               {!collapsed && 'Admin'}

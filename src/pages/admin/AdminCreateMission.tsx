@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Save, Rocket } from 'lucide-react';
 
-const steps = ['Basic Info', 'Budget & Rewards', 'Targeting', 'Evidence', 'Select Merchants', 'Review'];
+const steps = ['Basic Info', 'Instructions', 'Budget & Rewards', 'Targeting', 'Evidence', 'Select Merchants', 'Review'];
 
 const AdminCreateMission = () => {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ const AdminCreateMission = () => {
   const [merchants, setMerchants] = useState<any[]>([]);
   const [selectedMerchants, setSelectedMerchants] = useState<string[]>([]);
   const [form, setForm] = useState({
-    name: '', description: '', mission_type: 'custom', budget: '', reward_per_participant: '',
+    name: '', description: '', instructions: '', mission_type: 'custom', budget: '', reward_per_participant: '',
     max_participants: '', start_date: '', end_date: '', evidence_type: 'photo', validation_mode: 'manual',
   });
 
@@ -40,7 +40,8 @@ const AdminCreateMission = () => {
     try {
       const user = (await db.auth.getUser()).data.user;
       const missions = selectedMerchants.map(merchantId => ({
-        merchant_id: merchantId, name: form.name, description: form.description, mission_type: form.mission_type,
+        merchant_id: merchantId, name: form.name, description: form.description, instructions: form.instructions || null,
+        mission_type: form.mission_type,
         budget: form.budget ? parseFloat(form.budget) : null,
         reward_per_participant: form.reward_per_participant ? parseFloat(form.reward_per_participant) : null,
         max_participants: form.max_participants ? parseInt(form.max_participants) : null,
@@ -87,22 +88,29 @@ const AdminCreateMission = () => {
       <Card><CardContent className="pt-6 space-y-4">
         {step === 0 && (<>
           <div className="space-y-2"><Label>Mission Name</Label><Input value={form.name} onChange={e => update('name', e.target.value)} placeholder="e.g. Summer Gym Challenge" /></div>
-          <div className="space-y-2"><Label>Description</Label><Textarea value={form.description} onChange={e => update('description', e.target.value)} rows={4} /></div>
+          <div className="space-y-2"><Label>Description</Label><Textarea value={form.description} onChange={e => update('description', e.target.value)} rows={3} placeholder="Brief description of the mission" /></div>
           <div className="space-y-2"><Label>Mission Type</Label>
             <Select value={form.mission_type} onValueChange={v => update('mission_type', v)}><SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent><SelectItem value="purchase">Purchase</SelectItem><SelectItem value="review">Review</SelectItem><SelectItem value="social">Social</SelectItem><SelectItem value="event">Event</SelectItem><SelectItem value="referral">Referral</SelectItem><SelectItem value="custom">Custom</SelectItem></SelectContent>
             </Select></div>
         </>)}
         {step === 1 && (<>
+          <div className="space-y-2">
+            <Label>Fighter Instructions</Label>
+            <p className="text-xs text-muted-foreground">Step-by-step instructions that fighters will see when they open this mission. Use numbered steps.</p>
+            <Textarea value={form.instructions} onChange={e => update('instructions', e.target.value)} rows={6} placeholder={"1. Go to the merchant's location\n2. Complete the required action\n3. Take a photo as proof\n4. Upload the evidence"} />
+          </div>
+        </>)}
+        {step === 2 && (<>
           <div className="space-y-2"><Label>Total Budget (USD) per Merchant</Label><Input type="number" min="0" step="0.01" value={form.budget} onChange={e => update('budget', e.target.value)} placeholder="1000.00" /></div>
           <div className="space-y-2"><Label>Reward per Participant (USD)</Label><Input type="number" min="0" step="0.01" value={form.reward_per_participant} onChange={e => update('reward_per_participant', e.target.value)} placeholder="10.00" /></div>
           <div className="space-y-2"><Label>Max Participants</Label><Input type="number" min="1" value={form.max_participants} onChange={e => update('max_participants', e.target.value)} placeholder="100" /></div>
         </>)}
-        {step === 2 && (<>
+        {step === 3 && (<>
           <div className="space-y-2"><Label>Start Date</Label><Input type="datetime-local" value={form.start_date} onChange={e => update('start_date', e.target.value)} /></div>
           <div className="space-y-2"><Label>End Date</Label><Input type="datetime-local" value={form.end_date} onChange={e => update('end_date', e.target.value)} /></div>
         </>)}
-        {step === 3 && (<>
+        {step === 4 && (<>
           <div className="space-y-2"><Label>Evidence Type</Label>
             <Select value={form.evidence_type} onValueChange={v => update('evidence_type', v)}><SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent><SelectItem value="photo">Photo</SelectItem><SelectItem value="video">Video</SelectItem><SelectItem value="receipt">Receipt</SelectItem><SelectItem value="screenshot">Screenshot</SelectItem><SelectItem value="link">Link</SelectItem><SelectItem value="text">Text</SelectItem></SelectContent>
@@ -112,7 +120,7 @@ const AdminCreateMission = () => {
               <SelectContent><SelectItem value="manual">Manual Review</SelectItem><SelectItem value="auto">Auto Approve</SelectItem><SelectItem value="hybrid">Hybrid</SelectItem></SelectContent>
             </Select></div>
         </>)}
-        {step === 4 && (
+        {step === 5 && (
           <div className="space-y-3">
             <h3 className="font-display text-lg">Select Merchants</h3>
             <p className="text-sm text-muted-foreground">A copy of this mission will be created for each selected merchant.</p>
@@ -130,7 +138,7 @@ const AdminCreateMission = () => {
             )}
           </div>
         )}
-        {step === 5 && (
+        {step === 6 && (
           <div className="space-y-3">
             <h3 className="font-display text-lg">Review Mission</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
@@ -143,6 +151,12 @@ const AdminCreateMission = () => {
               <div><span className="text-muted-foreground">Validation:</span> {form.validation_mode}</div>
               <div><span className="text-muted-foreground">Merchants:</span> {selectedMerchants.length} selected</div>
             </div>
+            {form.instructions && (
+              <div className="mt-2">
+                <p className="text-sm text-muted-foreground">Fighter Instructions:</p>
+                <pre className="text-sm whitespace-pre-wrap bg-secondary p-3 rounded-md mt-1">{form.instructions}</pre>
+              </div>
+            )}
             <div className="mt-2">
               <p className="text-sm text-muted-foreground">Selected merchants:</p>
               <div className="flex flex-wrap gap-2 mt-1">

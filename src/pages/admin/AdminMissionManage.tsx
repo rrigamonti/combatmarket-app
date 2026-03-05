@@ -4,9 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { db } from '@/integrations/supabase/db';
 import { toast } from 'sonner';
-import { ArrowLeft, UserPlus, Users } from 'lucide-react';
+import { ArrowLeft, UserPlus, Users, Save } from 'lucide-react';
 
 const AdminMissionManage = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,6 +18,8 @@ const AdminMissionManage = () => {
   const [fighters, setFighters] = useState<any[]>([]);
   const [assignedFighters, setAssignedFighters] = useState<string[]>([]);
   const [selectedFighters, setSelectedFighters] = useState<string[]>([]);
+  const [instructions, setInstructions] = useState('');
+  const [savingInstructions, setSavingInstructions] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -27,7 +31,7 @@ const AdminMissionManage = () => {
     // Fetch mission
     const { data: m } = await db.from('missions').select('*').eq('id', id).single();
     setMission(m);
-
+    if (m) setInstructions(m.instructions || '');
     if (m) {
       // Fetch merchant name
       const { data: merch } = await db.from('merchants').select('id, name').eq('id', m.merchant_id).single();
@@ -111,6 +115,35 @@ const AdminMissionManage = () => {
             <div><span className="text-muted-foreground">Validation:</span><br />{mission.validation_mode}</div>
           </div>
           {mission.description && <p className="mt-4 text-sm text-muted-foreground">{mission.description}</p>}
+        </CardContent>
+      </Card>
+
+      {/* Instructions */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-display text-lg">📋 Fighter Instructions</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="space-y-2">
+            <Label>Step-by-step instructions visible to fighters</Label>
+            <Textarea
+              value={instructions}
+              onChange={e => setInstructions(e.target.value)}
+              rows={6}
+              placeholder={"1. Go to the merchant's location\n2. Complete the required action\n3. Take a photo as proof\n4. Upload the evidence"}
+            />
+          </div>
+          <Button
+            disabled={savingInstructions}
+            onClick={async () => {
+              setSavingInstructions(true);
+              const { error } = await db.from('missions').update({ instructions: instructions || null }).eq('id', id!);
+              setSavingInstructions(false);
+              if (error) { toast.error(error.message); } else { toast.success('Instructions saved'); }
+            }}
+          >
+            <Save className="h-4 w-4 mr-1" /> {savingInstructions ? 'Saving...' : 'Save Instructions'}
+          </Button>
         </CardContent>
       </Card>
 

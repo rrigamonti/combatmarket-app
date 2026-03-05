@@ -15,6 +15,7 @@ interface Mission {
   id: string;
   name: string;
   description: string | null;
+  instructions: string | null;
   mission_type: string;
   reward_per_participant: number | null;
   evidence_type: string | null;
@@ -126,6 +127,20 @@ const FighterMissionDetail = () => {
         </div>
         <Badge variant="secondary" className="uppercase">{mission.mission_type}</Badge>
       </div>
+
+      {/* Instructions */}
+      {mission.instructions && (
+        <Card className="border-primary/30 bg-primary/5">
+          <CardHeader className="pb-2">
+            <CardTitle className="font-display text-lg flex items-center gap-2">
+              📋 Come completare questa missione
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <pre className="text-sm whitespace-pre-wrap font-sans leading-relaxed">{mission.instructions}</pre>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>

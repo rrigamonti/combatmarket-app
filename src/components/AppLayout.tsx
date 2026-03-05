@@ -16,6 +16,7 @@ import {
   CreditCard,
   FileText,
   ShieldCheck,
+  Swords,
 } from 'lucide-react';
 
 const merchantNavItems = [
@@ -28,10 +29,10 @@ const merchantNavItems = [
 
 const adminNavItems = [
   { title: 'Home', url: '/admin', icon: LayoutDashboard, exact: true },
+  { title: 'Analytics', url: '/admin/analytics', icon: BarChart3 },
+  { title: 'Missions', url: '/admin/missions', icon: Target },
   { title: 'Merchants', url: '/admin/merchants', icon: Users },
-  { title: 'Reviews', url: '/admin/reviews', icon: ClipboardCheck },
-  { title: 'Payouts', url: '/admin/payouts', icon: CreditCard },
-  { title: 'Reports', url: '/admin/reports', icon: FileText },
+  { title: 'Fighters', url: '/admin/fighters', icon: Swords },
 ];
 
 interface AppLayoutProps {

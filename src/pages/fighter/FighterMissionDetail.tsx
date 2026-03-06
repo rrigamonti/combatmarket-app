@@ -10,6 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { db } from '@/integrations/supabase/db';
 import { toast } from 'sonner';
 import { ArrowLeft, Send } from 'lucide-react';
+import EvidenceImageUpload from '@/components/EvidenceImageUpload';
 
 interface Mission {
   id: string;
@@ -46,6 +47,7 @@ const FighterMissionDetail = () => {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [evidenceUrl, setEvidenceUrl] = useState('');
   const [evidenceNotes, setEvidenceNotes] = useState('');
+  const [evidenceImageUrl, setEvidenceImageUrl] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -77,13 +79,14 @@ const FighterMissionDetail = () => {
     if (!user || !id || !participation) return;
     setSubmitting(true);
     try {
+      const finalUrl = evidenceImageUrl || evidenceUrl || null;
       const { error } = await db.from('submissions').insert({
         mission_id: id,
         fighter_id: user.id,
         participation_id: participation.id,
-        evidence_url: evidenceUrl || null,
+        evidence_url: finalUrl,
         evidence_notes: evidenceNotes || null,
-        evidence_type: mission?.evidence_type || 'text',
+        evidence_type: evidenceImageUrl ? 'photo' : (mission?.evidence_type || 'text'),
         status: 'pending',
       });
       if (error) throw error;
@@ -96,6 +99,7 @@ const FighterMissionDetail = () => {
       toast.success('Evidence submitted!');
       setEvidenceUrl('');
       setEvidenceNotes('');
+      setEvidenceImageUrl(null);
 
       // Refresh
       const { data: sData } = await db
@@ -164,15 +168,21 @@ const FighterMissionDetail = () => {
             <CardTitle className="font-display text-lg">Submit Evidence</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            <EvidenceImageUpload imageUrl={evidenceImageUrl} onImageChange={setEvidenceImageUrl} />
+            <div className="relative flex items-center gap-2">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-xs text-muted-foreground">or paste a link</span>
+              <div className="flex-1 h-px bg-border" />
+            </div>
             <div className="space-y-2">
-              <Label>Evidence URL (link, image, etc.)</Label>
-              <Input value={evidenceUrl} onChange={e => setEvidenceUrl(e.target.value)} placeholder="https://..." />
+              <Label>Evidence URL</Label>
+              <Input value={evidenceUrl} onChange={e => setEvidenceUrl(e.target.value)} placeholder="https://..." disabled={!!evidenceImageUrl} />
             </div>
             <div className="space-y-2">
               <Label>Notes</Label>
               <Textarea value={evidenceNotes} onChange={e => setEvidenceNotes(e.target.value)} placeholder="Describe your submission..." />
             </div>
-            <Button onClick={handleSubmit} disabled={submitting}>
+            <Button onClick={handleSubmit} disabled={submitting || (!evidenceUrl && !evidenceImageUrl && !evidenceNotes)}>
               <Send className="h-4 w-4 mr-1" /> {submitting ? 'Submitting...' : 'Submit Evidence'}
             </Button>
           </CardContent>

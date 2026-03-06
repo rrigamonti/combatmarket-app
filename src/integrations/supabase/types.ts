@@ -151,6 +151,7 @@ export type Database = {
           end_date: string | null
           evidence_type: Database["public"]["Enums"]["evidence_type"] | null
           id: string
+          image_url: string | null
           instructions: string | null
           max_participants: number | null
           merchant_id: string
@@ -172,6 +173,7 @@ export type Database = {
           end_date?: string | null
           evidence_type?: Database["public"]["Enums"]["evidence_type"] | null
           id?: string
+          image_url?: string | null
           instructions?: string | null
           max_participants?: number | null
           merchant_id: string
@@ -195,6 +197,7 @@ export type Database = {
           end_date?: string | null
           evidence_type?: Database["public"]["Enums"]["evidence_type"] | null
           id?: string
+          image_url?: string | null
           instructions?: string | null
           max_participants?: number | null
           merchant_id?: string

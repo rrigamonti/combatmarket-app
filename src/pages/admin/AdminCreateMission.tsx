@@ -10,6 +10,7 @@ import { db } from '@/integrations/supabase/db';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Save, Rocket } from 'lucide-react';
+import MissionImageUpload from '@/components/MissionImageUpload';
 
 const steps = ['Basic Info', 'Instructions', 'Budget & Rewards', 'Targeting', 'Evidence', 'Select Merchants', 'Review'];
 
@@ -23,6 +24,7 @@ const AdminCreateMission = () => {
     name: '', description: '', instructions: '', mission_type: 'custom', budget: '', reward_per_participant: '',
     max_participants: '', start_date: '', end_date: '', evidence_type: 'photo', validation_mode: 'manual',
   });
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
     db.from('merchants').select('id, name, status').eq('status', 'active').then(({ data }) => setMerchants(data || []));
@@ -40,7 +42,7 @@ const AdminCreateMission = () => {
     try {
       const user = (await db.auth.getUser()).data.user;
       const missions = selectedMerchants.map(merchantId => ({
-        merchant_id: merchantId, name: form.name, description: form.description, instructions: form.instructions || null,
+        merchant_id: merchantId, name: form.name, description: form.description, instructions: form.instructions || null, image_url: imageUrl,
         mission_type: form.mission_type,
         budget: form.budget ? parseFloat(form.budget) : null,
         reward_per_participant: form.reward_per_participant ? parseFloat(form.reward_per_participant) : null,
@@ -88,7 +90,8 @@ const AdminCreateMission = () => {
       <Card><CardContent className="pt-6 space-y-4">
         {step === 0 && (<>
           <div className="space-y-2"><Label>Mission Name</Label><Input value={form.name} onChange={e => update('name', e.target.value)} placeholder="e.g. Summer Gym Challenge" /></div>
-          <div className="space-y-2"><Label>Description</Label><Textarea value={form.description} onChange={e => update('description', e.target.value)} rows={3} placeholder="Brief description of the mission" /></div>
+           <div className="space-y-2"><Label>Description</Label><Textarea value={form.description} onChange={e => update('description', e.target.value)} rows={3} placeholder="Brief description of the mission" /></div>
+          <MissionImageUpload imageUrl={imageUrl} onImageChange={setImageUrl} />
           <div className="space-y-2"><Label>Mission Type</Label>
             <Select value={form.mission_type} onValueChange={v => update('mission_type', v)}><SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent><SelectItem value="purchase">Purchase</SelectItem><SelectItem value="review">Review</SelectItem><SelectItem value="social">Social</SelectItem><SelectItem value="event">Event</SelectItem><SelectItem value="referral">Referral</SelectItem><SelectItem value="custom">Custom</SelectItem></SelectContent>
@@ -150,6 +153,7 @@ const AdminCreateMission = () => {
               <div><span className="text-muted-foreground">Evidence:</span> {form.evidence_type}</div>
               <div><span className="text-muted-foreground">Validation:</span> {form.validation_mode}</div>
               <div><span className="text-muted-foreground">Merchants:</span> {selectedMerchants.length} selected</div>
+              {imageUrl && <div className="col-span-2"><span className="text-muted-foreground">Image:</span><br /><img src={imageUrl} alt="Mission" className="h-20 rounded-md mt-1 object-cover" /></div>}
             </div>
             {form.instructions && (
               <div className="mt-2">

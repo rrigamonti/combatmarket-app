@@ -10,6 +10,7 @@ import { db } from '@/integrations/supabase/db';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Save, Rocket } from 'lucide-react';
+import MissionImageUpload from '@/components/MissionImageUpload';
 
 const steps = ['Basic Info', 'Budget & Rewards', 'Targeting', 'Evidence', 'Review'];
 
@@ -22,13 +23,14 @@ const CreateMission = () => {
     name: '', description: '', mission_type: 'custom', budget: '', reward_per_participant: '',
     max_participants: '', start_date: '', end_date: '', evidence_type: 'photo', validation_mode: 'manual',
   });
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const update = (key: string, value: string) => setForm(prev => ({ ...prev, [key]: value }));
 
   const buildPayload = async () => {
     const user = (await db.auth.getUser()).data.user;
     return {
-      merchant_id: merchantId, name: form.name, description: form.description, mission_type: form.mission_type,
+      merchant_id: merchantId, name: form.name, description: form.description, mission_type: form.mission_type, image_url: imageUrl,
       budget: form.budget ? parseFloat(form.budget) : null, reward_per_participant: form.reward_per_participant ? parseFloat(form.reward_per_participant) : null,
       max_participants: form.max_participants ? parseInt(form.max_participants) : null,
       start_date: form.start_date || null, end_date: form.end_date || null,
@@ -78,6 +80,7 @@ const CreateMission = () => {
         {step === 0 && (<>
           <div className="space-y-2"><Label>Mission Name</Label><Input value={form.name} onChange={e => update('name', e.target.value)} placeholder="e.g. Summer Gym Challenge" /></div>
           <div className="space-y-2"><Label>Description</Label><Textarea value={form.description} onChange={e => update('description', e.target.value)} rows={4} /></div>
+          <MissionImageUpload imageUrl={imageUrl} onImageChange={setImageUrl} />
           <div className="space-y-2"><Label>Mission Type</Label>
             <Select value={form.mission_type} onValueChange={v => update('mission_type', v)}><SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent><SelectItem value="purchase">Purchase</SelectItem><SelectItem value="review">Review</SelectItem><SelectItem value="social">Social</SelectItem><SelectItem value="event">Event</SelectItem><SelectItem value="referral">Referral</SelectItem><SelectItem value="custom">Custom</SelectItem></SelectContent>

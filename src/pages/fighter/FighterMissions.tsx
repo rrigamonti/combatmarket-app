@@ -17,6 +17,7 @@ interface Mission {
   max_participants: number | null;
   current_participants: number;
   end_date: string | null;
+  image_url: string | null;
 }
 
 const FighterMissions = () => {
@@ -31,7 +32,7 @@ const FighterMissions = () => {
     const fetchData = async () => {
       const { data: missionData } = await db
         .from('missions')
-        .select('id, name, description, mission_type, reward_per_participant, max_participants, current_participants, end_date')
+        .select('id, name, description, mission_type, reward_per_participant, max_participants, current_participants, end_date, image_url')
         .eq('status', 'active')
         .order('created_at', { ascending: false });
 
@@ -78,7 +79,12 @@ const FighterMissions = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {missions.map(m => (
-            <Card key={m.id} className="flex flex-col">
+            <Card key={m.id} className="flex flex-col overflow-hidden">
+              {m.image_url && (
+                <div className="w-full h-40 overflow-hidden">
+                  <img src={m.image_url} alt={m.name} className="w-full h-full object-cover" />
+                </div>
+              )}
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <CardTitle className="font-display text-lg">{m.name}</CardTitle>

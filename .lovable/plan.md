@@ -1,42 +1,42 @@
+## Plan: Move fighters into Combat Market v2.0, without touching this site
 
+### Key point
+I can only change the project we are chatting in. The import itself has to happen in the **Combat Market v2.0** chat. This project is only the source, and it stays exactly as it is.
 
-## Plan: Admin Portal Switching
+What this site holds:
+- **Fighters**: yes (email, name, avatar, fighter role, missions joined, proof sent, earnings)
+- **Storefront products**: no. There are no products here. They live in the **Combat Market Fighters** project, which has its own database. That needs a separate export from that project's chat.
 
-### What needs to happen
+### Steps
 
-The admin user should be able to freely navigate between Admin, Fighter, and Merchant dashboards without logging out. This requires two changes:
+1. **Here (this project): export the fighters**
+   - Build a clean CSV file of every fighter: original ID, email, full name, avatar, signup date.
+   - Optional second CSV with their mission history (joined, submitted, approved, paid amounts), if v2.0 will need it.
+   - No passwords and no login data go in the files.
+   - Nothing gets written or deleted here.
 
-1. **Remove role restrictions on route guards for admins** — Currently `FighterRoute` blocks non-fighters and `MerchantRoute` blocks non-merchants. Admins should bypass these checks.
+2. **In Combat Market Fighters: export storefronts and products**
+   - In that project's chat, ask for a CSV of products per fighter, using the fighter's email as the link.
 
-2. **Add "Switch Portal" buttons** in the UI:
-   - **Admin Dashboard**: Add buttons to switch to Fighter and Merchant views
-   - **Fighter & Merchant layouts**: Show a "Back to Admin" button only when the user is an admin
+3. **In Combat Market v2.0: merge**
+   - Upload both CSVs there.
+   - Match fighters **by email** (lowercased). Fighter already there: keep it, fill only empty fields. Fighter missing: create it.
+   - Match products by the fighter plus product URL/ID (or name if no URL). Missing products get added, existing ones are left alone.
+   - Duplicate or missing emails get listed for you to decide, never merged automatically.
+   - Do a test run first that only reports "X new fighters, Y new products, Z conflicts", then the real import.
 
-### Technical changes
+4. **Logins for imported fighters**
+   - The first time they log in on v2.0, they confirm their email and choose a new password. After that they see their storefront and products.
 
-**1. `src/App.tsx` — Update route guards**
-- `MerchantRoute`: Allow access if `isAdmin` (in addition to `isMerchant`)
-- `FighterRoute`: Allow access if `isAdmin` (in addition to `isFighter`)
+### Undo
+- This site does not change at all.
+- On v2.0, each imported row gets tagged with its batch, so a bad import can be removed without touching fighters who were already there. Lovable history can also roll back code changes.
 
-**2. `src/pages/admin/AdminDashboard.tsx` — Add switch buttons**
-- Add two buttons/cards: "View as Fighter" (navigates to `/fighter`) and "View as Merchant" (navigates to `/merchant`)
+### What I deliver in this chat once approved
+- The fighters CSV (plus the optional mission history CSV) in your Files.
+- A ready-to-paste message for the Combat Market Fighters chat and one for the v2.0 chat, describing exactly what to do.
 
-**3. `src/components/AppLayout.tsx` — Add "Back to Admin" button**
-- When `isAdmin` is true and the current path starts with `/merchant`, show a button/banner to navigate back to `/admin`
-
-**4. `src/components/FighterLayout.tsx` — Add "Back to Admin" button**
-- When `isAdmin` is true, show a button/banner to navigate back to `/admin`
-
-**5. `src/components/AppSidebar.tsx` — Add portal switch links in sidebar**
-- When `isAdmin` and viewing merchant routes, add a sidebar link back to Admin Dashboard
-
-**6. `src/components/FighterSidebar.tsx` — Add admin link in sidebar**
-- When `isAdmin`, add a sidebar link back to Admin Dashboard
-
-**7. `src/components/MobileBottomNav.tsx` — No structural change needed**
-- The "Back to Admin" button will be in the header/banner, not the bottom nav, to keep it clean
-
-### Admin viewing other portals
-
-The admin won't need a `merchant_id` to view the merchant dashboard — the merchant dashboard will show data based on `merchantId` from auth context (which may be null for admin). The pages should handle this gracefully (show all data or empty state). This is already partially handled since admin RLS policies grant broad read access.
-
+### Technical details
+- Source query: `profiles` joined with `user_roles` where role = 'fighter'; history from `mission_participations` and `submissions` keyed by `fighter_id`.
+- Read-only queries, so no database changes and no code changes here.
+- Files saved under /mnt/documents.
